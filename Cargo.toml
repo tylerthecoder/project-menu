@@ -1,0 +1,10 @@
+[package]
+name = "dir_searcher"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+gtk = { version = "0.6", package = "gtk4" }
+fuzzy-matcher = "0.3"
+dirs = "5.0"
+regex = "1.5"
