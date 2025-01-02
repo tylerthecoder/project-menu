@@ -78,11 +78,16 @@ fn launch_workspace(workspace_name: &str, directory: &PathBuf) {
         .spawn()
         .expect("Failed to launch terminal");
 
-    // Launch editor (now using cursor instead of code)
+    // Launch editor
     Command::new("cursor")
         .arg(directory)
         .spawn()
         .expect("Failed to launch editor");
+
+    // Launch browser
+    Command::new("chromium")
+        .spawn()
+        .expect("Failed to launch browser");
 }
 
 fn build_ui(app: &Application) {
@@ -190,6 +195,7 @@ fn build_ui(app: &Application) {
     });
 
     // Handle selection
+    let window_weak = window.downgrade();
     list_box.connect_row_activated(move |_list_box, row| {
         let label = row.child().unwrap().downcast::<gtk::Label>().unwrap();
         let selected_dir = directories
@@ -200,6 +206,11 @@ fn build_ui(app: &Application) {
             .unwrap();
 
         launch_workspace(&label.text(), selected_dir);
+
+        // Close the window
+        if let Some(window) = window_weak.upgrade() {
+            window.close();
+        }
     });
 
     // Focus search entry on startup
